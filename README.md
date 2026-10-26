@@ -103,7 +103,17 @@ DATABASE_URL="postgresql://user:password@host/database?sslmode=require"
 NEXTAUTH_SECRET="your-random-32-character-secret"
 NEXTAUTH_URL="http://localhost:3000"
 NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+
+# Cloudinary (for image uploads)
+CLOUDINARY_CLOUD_NAME="your-cloud-name"
+CLOUDINARY_API_KEY="your-api-key"
+CLOUDINARY_API_SECRET="your-api-secret"
 ```
+
+**Get Cloudinary credentials:**
+1. Sign up at [cloudinary.com](https://cloudinary.com/users/register_free)
+2. Get your Cloud Name, API Key, and API Secret from the dashboard
+3. See [CLOUDINARY_SETUP.md](CLOUDINARY_SETUP.md) for detailed instructions
 
 ### 4. Setup database
 ```bash
