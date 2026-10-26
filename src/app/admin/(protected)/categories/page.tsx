@@ -42,8 +42,12 @@ export default function CategoriesPage() {
   }
 
   const openEdit = (cat: Category) => {
+    console.log('Opening edit for category:', cat)
+    console.log('Category image:', cat.image)
     setEditing(cat)
-    setForm({ name: cat.name, parentId: cat.parentId || '', images: cat.image ? [cat.image] : [] })
+    const imageArray = cat.image ? [cat.image] : []
+    console.log('Setting images array:', imageArray)
+    setForm({ name: cat.name, parentId: cat.parentId || '', images: imageArray })
     setShowDialog(true)
   }
 

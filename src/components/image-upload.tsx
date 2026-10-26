@@ -1,5 +1,5 @@
 'use client'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Upload, X, Loader2, Image as ImageIcon } from 'lucide-react'
 import Image from 'next/image'
 import toast from 'react-hot-toast'
@@ -14,6 +14,11 @@ export function ImageUpload({ images, onChange, maxImages = 5 }: ImageUploadProp
   const [uploading, setUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // Debug: log when images prop changes
+  useEffect(() => {
+    console.log('ImageUpload received images:', images)
+  }, [images])
 
   const convertToWebP = async (file: File): Promise<Blob> => {
     return new Promise((resolve, reject) => {

@@ -131,7 +131,15 @@ export default async function HomePage() {
                   href={`/shop/${cat.slug}`}
                   className="bg-white rounded-xl p-5 flex flex-col items-center gap-3 shadow-sm hover:shadow-md hover:border-amber-300 border border-transparent transition-all text-center"
                 >
-                  <span className="text-4xl">{categoryEmoji(cat.slug)}</span>
+                  {cat.image ? (
+                    <img 
+                      src={cat.image} 
+                      alt={cat.name} 
+                      className="w-16 h-16 object-cover rounded-lg"
+                    />
+                  ) : (
+                    <span className="text-4xl">{categoryEmoji(cat.slug)}</span>
+                  )}
                   <span className="text-sm font-medium text-amber-900">{cat.name}</span>
                 </Link>
               ))}
