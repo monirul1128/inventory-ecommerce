@@ -100,24 +100,27 @@ export default function CategoriesPage() {
 
       {loading ? (
         <p className="text-gray-400">লোড হচ্ছে...</p>
+      ) : categories.length === 0 ? (
+        <div className="bg-white rounded-xl ring-1 ring-gray-200 p-12 text-center">
+          <p className="text-gray-400">কোনো ক্যাটাগরি নেই</p>
+        </div>
       ) : (
-        <div className="bg-white rounded-xl ring-1 ring-gray-200 overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="text-left px-4 py-3 text-gray-600 font-medium">নাম</th>
-                <th className="text-left px-4 py-3 text-gray-600 font-medium">স্লাগ</th>
-                <th className="text-left px-4 py-3 text-gray-600 font-medium">প্যারেন্ট</th>
-                <th className="text-left px-4 py-3 text-gray-600 font-medium">পণ্য</th>
-                <th className="text-left px-4 py-3 text-gray-600 font-medium">উপ-ক্যাটাগরি</th>
-                <th className="text-right px-4 py-3 text-gray-600 font-medium">অ্যাকশন</th>
-              </tr>
-            </thead>
-            <tbody>
-              {categories.length === 0 ? (
-                <tr><td colSpan={6} className="text-center py-8 text-gray-400">কোনো ক্যাটাগরি নেই</td></tr>
-              ) : (
-                categories.map(cat => (
+        <>
+          {/* Desktop Table */}
+          <div className="hidden lg:block bg-white rounded-xl ring-1 ring-gray-200 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 border-b">
+                <tr>
+                  <th className="text-left px-4 py-3 text-gray-600 font-medium">নাম</th>
+                  <th className="text-left px-4 py-3 text-gray-600 font-medium">স্লাগ</th>
+                  <th className="text-left px-4 py-3 text-gray-600 font-medium">প্যারেন্ট</th>
+                  <th className="text-left px-4 py-3 text-gray-600 font-medium">পণ্য</th>
+                  <th className="text-left px-4 py-3 text-gray-600 font-medium">উপ-ক্যাটাগরি</th>
+                  <th className="text-right px-4 py-3 text-gray-600 font-medium">অ্যাকশন</th>
+                </tr>
+              </thead>
+              <tbody>
+                {categories.map(cat => (
                   <tr key={cat.id} className={`border-b hover:bg-gray-50 ${cat.parentId ? 'bg-amber-50/30' : ''}`}>
                     <td className="px-4 py-3 font-medium">
                       {cat.parentId && <span className="text-gray-400 mr-2">↳</span>}
@@ -130,8 +133,8 @@ export default function CategoriesPage() {
                     </td>
                     <td className="px-4 py-3">{cat._count?.products ?? 0}</td>
                     <td className="px-4 py-3">{cat.children?.length ?? 0}</td>
-                    <td className="px-4 py-3 text-right">
-                      <button onClick={() => openEdit(cat)} className="text-blue-600 hover:underline mr-3 text-xs">এডিট</button>
+                    <td className="px-4 py-3 text-right space-x-2">
+                      <button onClick={() => openEdit(cat)} className="text-blue-600 hover:underline text-xs">এডিট</button>
                       <button
                         onClick={() => handleDelete(cat.id)}
                         disabled={deleting === cat.id}
@@ -141,11 +144,54 @@ export default function CategoriesPage() {
                       </button>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Card Layout */}
+          <div className="lg:hidden space-y-3">
+            {categories.map(cat => (
+              <div key={cat.id} className={`bg-white rounded-lg ring-1 ring-gray-200 p-4 ${cat.parentId ? 'ml-4 bg-amber-50/30' : ''}`}>
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex-1">
+                    <div className="font-medium text-gray-900 mb-1">
+                      {cat.parentId && <span className="text-gray-400 mr-1">↳</span>}
+                      {cat.image && <span className="mr-1">🖼️</span>}
+                      {cat.name}
+                    </div>
+                    <div className="text-xs text-gray-500 font-mono">{cat.slug}</div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => openEdit(cat)} className="text-blue-600 text-xs px-2 py-1 border border-blue-200 rounded hover:bg-blue-50">
+                      এডিট
+                    </button>
+                    <button
+                      onClick={() => handleDelete(cat.id)}
+                      disabled={deleting === cat.id}
+                      className="text-red-600 text-xs px-2 py-1 border border-red-200 rounded hover:bg-red-50 disabled:opacity-50"
+                    >
+                      মুছুন
+                    </button>
+                  </div>
+                </div>
+                <div className="flex gap-4 text-xs text-gray-600">
+                  {cat.parent && (
+                    <div>
+                      <span className="text-gray-400">প্যারেন্ট:</span> <Badge variant="secondary" className="text-xs">{cat.parent.name}</Badge>
+                    </div>
+                  )}
+                  <div>
+                    <span className="text-gray-400">পণ্য:</span> <span className="font-medium">{cat._count?.products ?? 0}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400">উপ:</span> <span className="font-medium">{cat.children?.length ?? 0}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Dialog */}
