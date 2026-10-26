@@ -3,7 +3,9 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import { useState } from 'react'
+import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 
 const navSections = [
   {
@@ -97,34 +99,30 @@ const navSections = [
   },
 ]
 
-export function AdminSidebar() {
+function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
   const pathname = usePathname()
-  const [collapsed, setCollapsed] = useState(false)
 
   return (
-    <aside className={cn('h-full bg-amber-900 text-white flex flex-col transition-all duration-300', collapsed ? 'w-16' : 'w-64')}>
+    <div className="h-full bg-amber-900 text-white flex flex-col">
       <div className="flex items-center justify-between p-4 border-b border-amber-800">
-        {!collapsed && <span className="font-bold text-lg">🪑 ফার্নিচার শপ</span>}
-        <button onClick={() => setCollapsed(!collapsed)} className="text-amber-200 hover:text-white p-1">
-          {collapsed ? '→' : '←'}
-        </button>
+        <span className="font-bold text-lg">🪑 ফার্নিচার শপ</span>
       </div>
       <nav className="flex-1 overflow-y-auto py-2">
         {navSections.map(section => (
           <div key={section.title} className="mb-2">
-            {!collapsed && <p className="px-4 py-1 text-xs text-amber-400 uppercase tracking-wider">{section.title}</p>}
+            <p className="px-4 py-1 text-xs text-amber-400 uppercase tracking-wider">{section.title}</p>
             {section.items.map(item => (
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={onLinkClick}
                 className={cn(
                   'flex items-center gap-3 px-4 py-2 text-sm hover:bg-amber-800 transition-colors',
                   pathname === item.href || pathname.startsWith(item.href + '/') ? 'bg-amber-800 text-white font-medium' : 'text-amber-100'
                 )}
-                title={collapsed ? item.label : undefined}
               >
                 <span className="text-base shrink-0">{item.icon}</span>
-                {!collapsed && <span>{item.label}</span>}
+                <span>{item.label}</span>
               </Link>
             ))}
           </div>
@@ -136,9 +134,44 @@ export function AdminSidebar() {
           className="flex items-center gap-2 text-amber-200 hover:text-white text-sm w-full"
         >
           <span>🚪</span>
-          {!collapsed && <span>লগআউট</span>}
+          <span>লগআউট</span>
         </button>
       </div>
-    </aside>
+    </div>
+  )
+}
+
+export function AdminSidebar() {
+  const [collapsed, setCollapsed] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  return (
+    <>
+      {/* Mobile Header with Menu Button */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-amber-900 text-white px-4 py-3 flex items-center justify-between border-b border-amber-800">
+        <span className="font-bold text-lg">🪑 ফার্নিচার শপ</span>
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetTrigger asChild>
+            <button className="text-white p-2">
+              <Menu size={24} />
+            </button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0 w-64 bg-amber-900 border-amber-800">
+            <SidebarContent onLinkClick={() => setMobileOpen(false)} />
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      {/* Desktop Sidebar */}
+      <aside className={cn('hidden lg:flex h-full bg-amber-900 text-white flex-col transition-all duration-300', collapsed ? 'w-16' : 'w-64')}>
+        <div className="flex items-center justify-between p-4 border-b border-amber-800">
+          {!collapsed && <span className="font-bold text-lg">🪑 ফার্নিচার শপ</span>}
+          <button onClick={() => setCollapsed(!collapsed)} className="text-amber-200 hover:text-white p-1">
+            {collapsed ? '→' : '←'}
+          </button>
+        </div>
+        <SidebarContent />
+      </aside>
+    </>
   )
 }
