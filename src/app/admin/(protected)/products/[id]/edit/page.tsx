@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { generateSKU, generateBarcode } from '@/lib/utils'
+import { ImageUpload } from '@/components/image-upload'
 import dynamic from 'next/dynamic'
 
 const Barcode = dynamic(() => import('react-barcode'), { ssr: false })
@@ -20,14 +21,14 @@ export default function EditProductPage() {
   const [form, setForm] = useState({
     name: '', description: '', sku: '', barcode: '', categoryId: '', supplierId: '',
     unit: 'PIECE', buyPrice: '', sellPrice: '', stock: '0', minStock: '5',
-    expiryDate: '', images: '', isFeatured: false,
+    expiryDate: '', images: [] as string[], isFeatured: false,
   })
   const [categories, setCategories] = useState<Category[]>([])
   const [suppliers, setSuppliers] = useState<Supplier[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
-  const set = (key: string, val: string | boolean) => setForm(f => ({ ...f, [key]: val }))
+  const set = (key: string, val: string | boolean | string[]) => setForm(f => ({ ...f, [key]: val }))
 
   useEffect(() => {
     Promise.all([
@@ -51,7 +52,7 @@ export default function EditProductPage() {
           stock: String(product.stock ?? '0'),
           minStock: String(product.minStock ?? '5'),
           expiryDate: product.expiryDate ? product.expiryDate.slice(0, 10) : '',
-          images: (product.images || []).join(', '),
+          images: Array.isArray(product.images) ? product.images : [],
           isFeatured: product.isFeatured || false,
         })
       }
@@ -73,7 +74,7 @@ export default function EditProductPage() {
         categoryId: form.categoryId || null,
         supplierId: form.supplierId || null,
         expiryDate: form.expiryDate || null,
-        images: form.images ? form.images.split(',').map(s => s.trim()).filter(Boolean) : [],
+        images: form.images,
       }
       const res = await fetch(`/api/products/${id}`, {
         method: 'PUT',
@@ -196,10 +197,12 @@ export default function EditProductPage() {
           </div>
 
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">ছবির URL (কমা দিয়ে আলাদা করুন)</label>
-            <input className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
-              value={form.images} onChange={e => set('images', e.target.value)}
-              placeholder="https://example.com/img1.jpg, https://example.com/img2.jpg" />
+            <label className="block text-sm font-medium text-gray-700 mb-2">পণ্যের ছবি</label>
+            <ImageUpload
+              images={form.images}
+              onChange={(images) => set('images', images)}
+              maxImages={5}
+            />
           </div>
 
           <div className="md:col-span-2 flex items-center gap-2">
