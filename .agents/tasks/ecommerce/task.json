@@ -1,0 +1,7 @@
+{
+  "task_id": "task-ecommerce-storefront",
+  "task_description": "Build the public customer-facing storefront (homepage, shop, category, product detail, cart, checkout, order tracking) for the Furniture E-Commerce + POS Next.js 16 App Router project, using the existing admin/API/Prisma/libs as-is, replacing a prior localStorage-based attempt with a zustand-based architecture and fixing the Cache Components build break.",
+  "status": "pending",
+  "feature_order": ["FEAT-001", "FEAT-002", "FEAT-003", "FEAT-004", "FEAT-005"],
+  "blocked_reason": null
+}

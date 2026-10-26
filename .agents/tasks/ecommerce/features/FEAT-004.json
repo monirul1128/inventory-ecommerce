@@ -1,0 +1,23 @@
+{
+  "id": "FEAT-004",
+  "type": "feat",
+  "description": "Cart and checkout as client components driven by the zustand store, with the ৳60 / free-over-৳5000 delivery rule folded into the order total (the Order model has no delivery field).",
+  "status": "pending",
+  "steps": [
+    "Rewrite c:\\Users\\360\\Downloads\\inventory\\src\\app\\(public)\\cart\\page.tsx as 'use client' using useCartStore. Table columns: image (next/image or 🪑 fallback), name, price (formatCurrency), qty with − / + buttons calling updateQty, line total, remove (removeItem + toast). Summary: subtotal = selectTotalPrice, delivery = getDelivery(subtotal) (show ৳60 or 'বিনামূল্যে' when free), total = subtotal+delivery. 'চেকআউট এ যান' → /checkout. Empty state: 'আপনার কার্ট খালি' + 'শপিং শুরু করুন' → /shop; also a 'কেনা চালিয়ে যান' link → /shop.",
+    "Rewrite c:\\Users\\360\\Downloads\\inventory\\src\\app\\(public)\\checkout\\page.tsx as 'use client' using useCartStore. On mount, if items.length===0 redirect to /shop with toast.error('আপনার কার্ট খালি'). Form: customerName, phone (11 digits), address (textarea), note (optional), paymentMethod radio (COD ক্যাশ অন ডেলিভারি / BKASH বিকাশ / NAGAD নগদ). Summary sidebar lists items, subtotal, delivery=getDelivery(subtotal), total. Validate name/phone(11 digits)/address (show Bengali error messages). 'অর্ডার নিশ্চিত করুন' POSTs /api/orders with {customerName,phone,address,note:note||null,paymentMethod, items:items.map(i=>({productId:i.id,qty:i.qty,price:i.price})), subtotal, discount:0, total: subtotal+delivery }. On success: clearCart(), show a success screen with the returned orderNo and a link 'অর্ডার দেখুন' → /orders/[id]; on !res.ok show toast.error(data.error).",
+    "Use a mounted guard when reading the cart for SSR safety (render the form only after mount, or render an empty/loading shell until hydrated) to avoid hydration mismatch."
+  ],
+  "acceptance_criteria": [
+    "/cart and /checkout read the cart from useCartStore (no localStorage access, no 'cart-updated' event).",
+    "Delivery is ৳60 for subtotal < ৳5000 and free (0) for subtotal >= ৳5000, computed via getDelivery.",
+    "Checkout POSTs /api/orders with total = subtotal + delivery and navigates to /orders/[id] on success; empty cart redirects to /shop.",
+    "`npx tsc --noEmit` exits 0."
+  ],
+  "verification": [
+    "Run `npx tsc --noEmit` and confirm exit 0.",
+    "After FEAT-005, run `npm run build` and confirm /cart and /checkout compile and the build exits 0."
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

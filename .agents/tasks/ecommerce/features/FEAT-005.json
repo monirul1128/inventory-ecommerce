@@ -1,0 +1,25 @@
+{
+  "id": "FEAT-005",
+  "type": "feat",
+  "description": "Order tracking: /orders (client, phone search) and /orders/[orderId] (server with a client OrderTimeline child). Uses the existing /api/orders?phone= GET (phone filter already supported) and prisma for the detail page. Completing this feature is what makes `npm run build` fully green.",
+  "status": "pending",
+  "steps": [
+    "Rewrite c:\\Users\\360\\Downloads\\inventory\\src\\app\\(public)\\orders\\page.tsx as 'use client'. Phone input + search → GET /api/orders?phone=<encoded>. Render the list (orderNo, date, total via formatCurrency, color-coded status badge: PENDING=yellow, PROCESSING=blue, SHIPPED=indigo, DELIVERED=green, CANCELLED=red) with a 'ট্র্যাক করুন' link → /orders/[id]. Empty result state: 'এই নম্বরে কোনো অর্ডার পাওয়া যায়নি'. Use Bengali status labels (অপেক্ষমান/প্রক্রিয়াধীন/শিপমেন্ট/ডেলিভারি/বাতিল).",
+    "Rewrite c:\\Users\\360\\Downloads\\inventory\\src\\app\\(public)\\orders\\[orderId]\\page.tsx as an async SERVER component with `export const dynamic = 'force-dynamic'`. Await params for orderId; const order = await prisma.order.findUnique({where:{id:orderId}, include:{items:{include:{product:true}}}}). If !order render 'অর্ডার পাওয়া যায়নি' + link to /orders. Otherwise render: header (অর্ডার: {orderNo} + date), status badge, customer info (name/phone/address + note), items table (image or 🪑 / name / qty / price / total), payment method label (COD ক্যাশ অন ডেলিভারি / BKASH বিকাশ / NAGAD নগদ), totals (subtotal, discount if >0, total — delivery is folded into total as there is no delivery field), and <OrderTimeline status={order.status} />.",
+    "Create c:\\Users\\360\\Downloads\\inventory\\src\\components\\order-timeline.tsx ('use client'): props { status: string }. Stepper PENDING → PROCESSING → SHIPPED → DELIVERED with the current step highlighted (amber filled) and the rest muted; progress bar width by current index. If status === 'CANCELLED' render a red banner 'অর্ডারটি বাতিল করা হয়েছে' instead of the stepper."
+  ],
+  "acceptance_criteria": [
+    "/orders is a client component that searches via GET /api/orders?phone= and shows color-coded status badges (SHIPPED=indigo).",
+    "/orders/[orderId] is a server component with force-dynamic that fetches via prisma and renders a client <OrderTimeline/>; CANCELLED shows a red banner.",
+    "`npx tsc --noEmit` exits 0 AND `npm run build` exits 0 (this feature removes the last build-blocking client page using use(params)).",
+    "`npm run lint` has no errors (warnings allowed)."
+  ],
+  "verification": [
+    "Run `npx tsc --noEmit` and confirm exit 0.",
+    "Run `npx prisma generate` and confirm exit 0.",
+    "Run `npm run build` and confirm it exits 0 with no prerender errors.",
+    "Run `npm run lint` and confirm no errors (warnings OK)."
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}
