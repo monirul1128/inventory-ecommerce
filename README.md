@@ -16,7 +16,13 @@ A full-stack Next.js 14 application combining a customer-facing furniture e-comm
 
 #### Product Management
 - Categories & subcategories (CRUD)
-- Products (add/edit/delete with SKU, barcode, images, stock, pricing)
+- **Products** - Add/edit/delete with:
+  - **Smart Image Upload** - Drag & drop or click to upload
+  - **Auto WebP Conversion** - Automatic compression & format conversion
+  - **Image Optimization** - Auto-resize to max 1200px, 85% quality
+  - SKU & Barcode auto-generation
+  - Stock management, pricing
+  - Multiple images per product (up to 5)
 - Suppliers & customers management
 - Low stock & expiry alerts
 
