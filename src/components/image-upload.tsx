@@ -65,17 +65,23 @@ export function ImageUpload({ images, onChange, maxImages = 5 }: ImageUploadProp
     const formData = new FormData()
     formData.append('file', blob, 'image.webp')
 
+    console.log('Uploading to /api/upload...')
+
     const res = await fetch('/api/upload', {
       method: 'POST',
       body: formData,
     })
 
+    console.log('Upload response status:', res.status)
+
     if (!res.ok) {
       const error = await res.json()
+      console.error('Upload error response:', error)
       throw new Error(error.error || 'Upload failed')
     }
 
     const data = await res.json()
+    console.log('Upload successful:', data.url)
     return data.url
   }
 
@@ -120,7 +126,8 @@ export function ImageUpload({ images, onChange, maxImages = 5 }: ImageUploadProp
       }
     } catch (error) {
       console.error('Upload error:', error)
-      toast.error('ছবি আপলোড করতে সমস্যা হয়েছে')
+      const errorMsg = error instanceof Error ? error.message : 'ছবি আপলোড করতে সমস্যা হয়েছে'
+      toast.error(errorMsg)
     } finally {
       setUploading(false)
     }
