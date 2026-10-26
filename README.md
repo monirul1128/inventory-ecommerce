@@ -1,36 +1,259 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛋️ Furniture E-Commerce + POS System
 
-## Getting Started
+A full-stack Next.js 14 application combining a customer-facing furniture e-commerce website with a complete Point of Sale (POS) admin panel for furniture stores.
 
-First, run the development server:
+## ✨ Features (40+)
 
+### 🛍️ Customer Website
+- **Homepage** - Hero banner, featured products, categories, new arrivals, best sellers
+- **Shop** - Product listing with filters (category, price range), search, pagination
+- **Product Detail** - Images, descriptions, add to cart, buy now, related products
+- **Shopping Cart** - View items, update quantity, remove items
+- **Checkout** - Customer info, address, payment method (COD/Bkash/Nagad)
+- **Order Tracking** - Search orders by phone number, view order status
+
+### ⚙️ Admin Panel (`/admin`)
+
+#### Product Management
+- Categories & subcategories (CRUD)
+- Products (add/edit/delete with SKU, barcode, images, stock, pricing)
+- Suppliers & customers management
+- Low stock & expiry alerts
+
+#### Sales & POS
+- **POS System** - Barcode scanning, quick cart, multiple payment methods (Cash/Bkash/Nagad/Card/Credit)
+- Sales history with filters
+- Sales returns
+- Invoice generation (print, PDF, WhatsApp share)
+
+#### Purchase Management
+- Purchase entry with invoice number
+- Purchase history
+- Purchase returns
+
+#### Inventory & Stock
+- Current stock overview
+- Stock movements (in/out/damage/return)
+- Low stock alerts
+- Expiry date alerts
+- Damaged stock tracking
+
+#### Financial Management
+- Customer & supplier ledgers (dues tracking)
+- Payment collection & payments
+- Daily cash register (open/close)
+- Daily expenses tracking
+- Discount & VAT handling
+
+#### Reports & Analytics
+- Daily profit/loss report (auto-calculated)
+- Monthly reports with charts
+- Yearly reports
+- Top-selling products
+- Dashboard with KPIs
+
+#### User Management
+- Employee management
+- Salary tracking & payment
+- Role-based access (Admin/Staff)
+- Admin & Staff login
+
+#### Utilities
+- Data backup & restore
+- Password change
+- WhatsApp/SMS reminders for dues
+
+## 🚀 Tech Stack
+
+- **Framework:** Next.js 14 (App Router, TypeScript)
+- **Database:** PostgreSQL (Neon)
+- **ORM:** Prisma 5
+- **Auth:** NextAuth.js v5
+- **UI:** Tailwind CSS v4 + shadcn/ui
+- **State:** Zustand (cart management)
+- **Charts:** Recharts
+- **PDF:** jsPDF + jspdf-autotable
+- **Barcode:** react-barcode, @zxing/browser
+- **Deployment:** Vercel
+
+## 📦 Installation
+
+### 1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/monirul1128/inventory-ecommerce.git
+cd inventory-ecommerce
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Setup environment variables
+Create a `.env` file in the root directory:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+DATABASE_URL="postgresql://user:password@host/database?sslmode=require"
+NEXTAUTH_SECRET="your-random-32-character-secret"
+NEXTAUTH_URL="http://localhost:3000"
+NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+```
 
-## Learn More
+### 4. Setup database
+```bash
+# Run migrations
+npx prisma migrate dev
 
-To learn more about Next.js, take a look at the following resources:
+# Seed initial data (admin user, sample products)
+npx prisma db seed
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 5. Run development server
+```bash
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Deploy on Vercel
+## 🔑 Default Login Credentials
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Email:** admin@shop.com
+- **Password:** admin123
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+⚠️ **Change these credentials immediately in production!**
+
+## 📂 Project Structure
+
+```
+inventory-ecommerce/
+├── prisma/
+│   ├── schema.prisma          # Database schema (20 models)
+│   ├── seed.ts                # Seed data with furniture items
+│   └── migrations/            # Database migrations
+├── src/
+│   ├── app/
+│   │   ├── (public)/          # Customer-facing pages
+│   │   │   ├── page.tsx       # Homepage
+│   │   │   ├── shop/          # Shop & category pages
+│   │   │   ├── product/[id]/  # Product detail
+│   │   │   ├── cart/          # Shopping cart
+│   │   │   ├── checkout/      # Checkout page
+│   │   │   └── orders/        # Order tracking
+│   │   ├── admin/             # Admin panel
+│   │   │   ├── login/         # Admin login
+│   │   │   └── (protected)/   # Protected admin pages
+│   │   └── api/               # API routes (35+ endpoints)
+│   ├── components/            # Reusable components
+│   │   ├── admin-sidebar.tsx
+│   │   ├── site-navbar.tsx
+│   │   ├── product-card.tsx
+│   │   └── cart-provider.tsx
+│   └── lib/
+│       ├── prisma.ts          # Prisma client
+│       ├── auth.ts            # NextAuth config
+│       ├── cart-store.ts      # Zustand cart store
+│       └── utils.ts           # Utility functions
+├── .env                       # Environment variables (not in git)
+├── .env.example               # Environment template
+├── next.config.ts             # Next.js configuration
+└── package.json
+```
+
+## 🌐 Deployment on Vercel
+
+### 1. Push to GitHub
+```bash
+git push origin main
+```
+
+### 2. Import to Vercel
+1. Go to [vercel.com/new](https://vercel.com/new)
+2. Import your GitHub repository
+3. Add environment variables in Vercel dashboard:
+   - `DATABASE_URL`
+   - `NEXTAUTH_SECRET`
+   - `NEXTAUTH_URL` (your vercel domain)
+   - `NEXT_PUBLIC_SITE_URL` (your vercel domain)
+
+### 3. Deploy
+Click "Deploy" and wait 2-3 minutes. Your app will be live!
+
+## 🗄️ Database Setup (Neon PostgreSQL)
+
+1. Sign up at [neon.tech](https://neon.tech)
+2. Create a new project
+3. Copy the connection string
+4. Add it to `.env` as `DATABASE_URL`
+5. Run migrations: `npx prisma migrate deploy`
+
+## 📊 Database Schema
+
+The application uses 20 Prisma models including:
+- User (Admin/Staff roles)
+- Category (with subcategories)
+- Product (with barcode, SKU, stock tracking)
+- Customer & Supplier
+- Purchase & Sale (with line items)
+- Order (e-commerce orders)
+- Payment, Expense, CashRegister
+- StockMovement, DamagedStock
+- Employee & EmployeeSalary
+
+## 🔒 Security Features
+
+- NextAuth.js authentication
+- Role-based access control (Admin/Staff)
+- Protected API routes
+- Middleware route protection
+- Password hashing with bcrypt
+- Session management
+
+## 🎨 UI/UX Features
+
+- Responsive design (mobile, tablet, desktop)
+- Bengali language support throughout
+- Warm furniture-store color palette (amber/orange tones)
+- Loading states & skeleton screens
+- Toast notifications
+- Print-friendly invoice layouts
+- Dark/light theme compatible
+
+## 📱 Mobile Responsive
+
+All pages are fully responsive with:
+- Collapsible sidebar navigation
+- Mobile-optimized POS interface
+- Touch-friendly buttons and forms
+- Bottom sheet filters on mobile
+
+## 🧪 Testing
+
+Build the project to ensure everything works:
+```bash
+npm run build
+```
+
+## 📝 License
+
+MIT License - feel free to use this project for your own furniture store!
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+## 👨‍💻 Author
+
+**Monirul Islam**
+- GitHub: [@monirul1128](https://github.com/monirul1128)
+
+## 🙏 Acknowledgments
+
+- Built with Next.js 14 App Router
+- UI components from shadcn/ui
+- Icons from Lucide React
+- Deployment on Vercel
+- Database on Neon PostgreSQL
+
+---
+
+Made with ❤️ for furniture stores in Bangladesh
