@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { generateSlug } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
+import { ImageUpload } from '@/components/image-upload'
 
 interface Category {
   id: string
@@ -21,7 +22,7 @@ export default function CategoriesPage() {
   const [showDialog, setShowDialog] = useState(false)
   const [editing, setEditing] = useState<Category | null>(null)
   const [deleting, setDeleting] = useState<string | null>(null)
-  const [form, setForm] = useState({ name: '', parentId: '', image: '' })
+  const [form, setForm] = useState({ name: '', parentId: '', images: [] as string[] })
   const [saving, setSaving] = useState(false)
 
   const load = async () => {
@@ -36,13 +37,13 @@ export default function CategoriesPage() {
 
   const openAdd = () => {
     setEditing(null)
-    setForm({ name: '', parentId: '', image: '' })
+    setForm({ name: '', parentId: '', images: [] })
     setShowDialog(true)
   }
 
   const openEdit = (cat: Category) => {
     setEditing(cat)
-    setForm({ name: cat.name, parentId: cat.parentId || '', image: cat.image || '' })
+    setForm({ name: cat.name, parentId: cat.parentId || '', images: cat.image ? [cat.image] : [] })
     setShowDialog(true)
   }
 
@@ -53,7 +54,7 @@ export default function CategoriesPage() {
       const body = {
         name: form.name.trim(),
         parentId: form.parentId || null,
-        image: form.image || null,
+        image: form.images[0] || null,
       }
       const url = editing ? `/api/categories/${editing.id}` : '/api/categories'
       const method = editing ? 'PUT' : 'POST'
@@ -230,12 +231,11 @@ export default function CategoriesPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">ছবি URL</label>
-                <input
-                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
-                  value={form.image}
-                  onChange={e => setForm(f => ({ ...f, image: e.target.value }))}
-                  placeholder="https://example.com/image.jpg"
+                <label className="block text-sm font-medium text-gray-700 mb-2">ক্যাটাগরি ছবি</label>
+                <ImageUpload
+                  images={form.images}
+                  onChange={(images) => setForm(f => ({ ...f, images }))}
+                  maxImages={1}
                 />
               </div>
             </div>
