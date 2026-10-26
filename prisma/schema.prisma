@@ -119,6 +119,7 @@ model Product {
   expiryDate     DateTime?
   images         Json            @default("[]")
   isFeatured     Boolean         @default(false)
+  warranty       String?
   supplierId     String?
   supplier       Supplier?       @relation(fields: [supplierId], references: [id])
   purchaseItems  PurchaseItem[]

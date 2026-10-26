@@ -16,7 +16,7 @@ const UNITS = ['PIECE', 'KG', 'LITER', 'METER', 'SET', 'PAIR', 'BOX', 'DOZEN']
 const defaultForm = {
   name: '', description: '', sku: '', barcode: '', categoryId: '', supplierId: '',
   unit: 'PIECE', buyPrice: '', sellPrice: '', stock: '0', minStock: '5',
-  expiryDate: '', images: [] as string[], isFeatured: false,
+  expiryDate: '', warranty: '', images: [] as string[], isFeatured: false,
 }
 
 export default function AddProductPage() {
@@ -54,6 +54,7 @@ export default function AddProductPage() {
         categoryId: form.categoryId || null,
         supplierId: form.supplierId || null,
         expiryDate: form.expiryDate || null,
+        warranty: form.warranty || null,
         images: form.images,
       }
       const res = await fetch('/api/products', {
@@ -186,6 +187,14 @@ export default function AddProductPage() {
             <label className="block text-sm font-medium text-gray-700 mb-1">মেয়াদ তারিখ</label>
             <input type="date" className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
               value={form.expiryDate} onChange={e => set('expiryDate', e.target.value)} />
+          </div>
+
+          {/* Warranty */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">ওয়ারেন্টি</label>
+            <input type="text" className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+              value={form.warranty} onChange={e => set('warranty', e.target.value)} 
+              placeholder="যেমন: ১ বছর, ৬ মাস, ২ বছর" />
           </div>
 
           {/* Images */}

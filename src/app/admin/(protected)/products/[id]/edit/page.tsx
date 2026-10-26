@@ -21,7 +21,7 @@ export default function EditProductPage() {
   const [form, setForm] = useState({
     name: '', description: '', sku: '', barcode: '', categoryId: '', supplierId: '',
     unit: 'PIECE', buyPrice: '', sellPrice: '', stock: '0', minStock: '5',
-    expiryDate: '', images: [] as string[], isFeatured: false,
+    expiryDate: '', warranty: '', images: [] as string[], isFeatured: false,
   })
   const [categories, setCategories] = useState<Category[]>([])
   const [suppliers, setSuppliers] = useState<Supplier[]>([])
@@ -52,6 +52,7 @@ export default function EditProductPage() {
           stock: String(product.stock ?? '0'),
           minStock: String(product.minStock ?? '5'),
           expiryDate: product.expiryDate ? product.expiryDate.slice(0, 10) : '',
+          warranty: product.warranty || '',
           images: Array.isArray(product.images) ? product.images : [],
           isFeatured: product.isFeatured || false,
         })
@@ -74,6 +75,7 @@ export default function EditProductPage() {
         categoryId: form.categoryId || null,
         supplierId: form.supplierId || null,
         expiryDate: form.expiryDate || null,
+        warranty: form.warranty || null,
         images: form.images,
       }
       const res = await fetch(`/api/products/${id}`, {
@@ -194,6 +196,13 @@ export default function EditProductPage() {
             <label className="block text-sm font-medium text-gray-700 mb-1">মেয়াদ তারিখ</label>
             <input type="date" className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
               value={form.expiryDate} onChange={e => set('expiryDate', e.target.value)} />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">ওয়ারেন্টি</label>
+            <input type="text" className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+              value={form.warranty} onChange={e => set('warranty', e.target.value)} 
+              placeholder="যেমন: ১ বছর, ৬ মাস, ২ বছর" />
           </div>
 
           <div className="md:col-span-2">

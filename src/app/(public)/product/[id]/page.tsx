@@ -187,6 +187,12 @@ export default async function ProductDetailPage({
               <span className="text-gray-500">বারকোড: </span>
               <span className="text-gray-700">{product.barcode}</span>
             </div>
+            {product.warranty && (
+              <div className="col-span-2">
+                <span className="text-gray-500">ওয়ারেন্টি: </span>
+                <span className="text-amber-700 font-medium">{product.warranty}</span>
+              </div>
+            )}
           </div>
 
           <ProductActions product={actionsProduct} />

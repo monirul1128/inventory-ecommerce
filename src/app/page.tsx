@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight, Star } from 'lucide-react'
 import type { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
@@ -132,11 +133,15 @@ export default async function HomePage() {
                   className="bg-white rounded-xl p-5 flex flex-col items-center gap-3 shadow-sm hover:shadow-md hover:border-amber-300 border border-transparent transition-all text-center"
                 >
                   {cat.image ? (
-                    <img 
-                      src={cat.image} 
-                      alt={cat.name} 
-                      className="w-16 h-16 object-cover rounded-lg"
-                    />
+                    <div className="relative w-16 h-16 rounded-lg overflow-hidden">
+                      <Image 
+                        src={cat.image} 
+                        alt={cat.name}
+                        fill
+                        sizes="64px"
+                        className="object-cover"
+                      />
+                    </div>
                   ) : (
                     <span className="text-4xl">{categoryEmoji(cat.slug)}</span>
                   )}
