@@ -151,10 +151,8 @@ export function AdminSidebar() {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-amber-900 text-white px-4 py-3 flex items-center justify-between border-b border-amber-800">
         <span className="font-bold text-lg">🪑 ফার্নিচার শপ</span>
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-          <SheetTrigger asChild>
-            <button className="text-white p-2">
-              <Menu size={24} />
-            </button>
+          <SheetTrigger className="text-white p-2">
+            <Menu size={24} />
           </SheetTrigger>
           <SheetContent side="left" className="p-0 w-64 bg-amber-900 border-amber-800">
             <SidebarContent onLinkClick={() => setMobileOpen(false)} />
