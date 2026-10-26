@@ -2,6 +2,12 @@
 
 ## ছবি আপলোড সমস্যা সমাধান
 
+**Last Updated:** $(date)
+
+### ⚠️ Important: Project-Level Environment Variables
+
+Vercel এ **Team Variables** কাজ না করলে **Project-Specific Variables** যোগ করুন।
+
 ### ১. Vercel Environment Variables চেক করুন
 
 Vercel Dashboard → Your Project → Settings → Environment Variables
