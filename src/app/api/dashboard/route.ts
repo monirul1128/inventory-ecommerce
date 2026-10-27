@@ -21,6 +21,10 @@ export async function GET() {
       expiringProducts,
       pendingOrders,
       recentSales,
+      totalCategories,
+      totalSuppliers,
+      totalCustomers,
+      totalSalesCount,
     ] = await Promise.all([
       prisma.sale.findMany({
         where: { date: todayRange },
@@ -47,6 +51,10 @@ export async function GET() {
         orderBy: { date: 'desc' },
         take: 5,
       }),
+      prisma.category.count(),
+      prisma.supplier.count(),
+      prisma.customer.count(),
+      prisma.sale.count(),
     ])
 
     const lowStockCount = allProductStocks.filter((p) => p.stock <= p.minStock).length
@@ -93,6 +101,10 @@ export async function GET() {
       lowStockCount,
       expiringSoonCount: expiringProducts,
       pendingOrdersCount: pendingOrders,
+      totalCategories,
+      totalSuppliers,
+      totalCustomers,
+      totalSales: totalSalesCount,
       topProductsToday,
       recentSales,
     })
