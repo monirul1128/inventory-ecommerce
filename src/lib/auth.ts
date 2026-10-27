@@ -52,14 +52,31 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) { token.role = (user as any).role; token.id = user.id }
+      if (user) { 
+        token.role = (user as any).role
+        token.id = user.id 
+        console.log('[Auth] JWT created for:', user.email, 'role:', (user as any).role)
+      }
       return token
     },
     async session({ session, token }) {
-      if (session.user) { (session.user as any).role = token.role; (session.user as any).id = token.id }
+      if (session.user) { 
+        (session.user as any).role = token.role
+        (session.user as any).id = token.id 
+        console.log('[Auth] Session created for:', session.user.email, 'role:', token.role)
+      }
       return session
     },
   },
-  pages: { signIn: '/admin/login' },
-  session: { strategy: 'jwt' },
+  pages: { 
+    signIn: '/admin/login',
+    error: '/admin/login',
+  },
+  session: { 
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+  debug: true, // Enable debug mode
+  trustHost: true, // Important for Vercel
 })
