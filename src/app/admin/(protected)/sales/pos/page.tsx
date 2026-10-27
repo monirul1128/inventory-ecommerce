@@ -10,6 +10,7 @@ interface Product {
   id: string
   name: string
   sku: string
+  barcode: string
   sellPrice: number
   stock: number
   unit: string
