@@ -16,28 +16,34 @@ export default function AdminLoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    
     try {
-      console.log('Attempting custom login with:', email)
+      console.log('🔐 Starting custom login for:', email)
       
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch('/api/admin-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       })
 
       const data = await res.json()
-      console.log('Login response:', data)
+      console.log('✅ Login API response:', data)
 
-      if (!res.ok) {
+      if (!res.ok || !data.success) {
         toast.error(data.error || 'লগইন করতে সমস্যা হয়েছে')
         return
       }
 
-      toast.success('লগইন সফল হয়েছে!')
-      router.push('/admin/dashboard')
-      router.refresh()
+      toast.success('লগইন সফল হয়েছে! ✨')
+      console.log('🎉 Login successful, redirecting to dashboard...')
+      
+      // Small delay to let cookie set
+      setTimeout(() => {
+        window.location.href = '/admin/dashboard'
+      }, 500)
+      
     } catch (error) {
-      console.error('Login exception:', error)
+      console.error('❌ Login exception:', error)
       toast.error('লগইন করতে সমস্যা হয়েছে')
     } finally { 
       setLoading(false) 
