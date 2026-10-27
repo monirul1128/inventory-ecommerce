@@ -8,7 +8,7 @@ interface SaleItem {
   qty: number
   sellPrice: number
   total: number
-  product: { name: string; sku: string; unit: string }
+  product: { name: string; sku: string; unit: string; warranty?: string | null }
 }
 
 interface Sale {
@@ -147,7 +147,14 @@ export default function InvoicePage() {
             {sale.items.map((item, idx) => (
               <tr key={item.id} className="border-b">
                 <td className="py-2 text-gray-400">{idx + 1}</td>
-                <td className="py-2">{item.product.name}</td>
+                <td className="py-2">
+                  <div>{item.product.name}</div>
+                  {item.product.warranty && (
+                    <div className="text-xs text-amber-600 mt-0.5">
+                      🛡️ ওয়ারেন্টি: {item.product.warranty}
+                    </div>
+                  )}
+                </td>
                 <td className="py-2 text-right">{item.qty} {item.product.unit}</td>
                 <td className="py-2 text-right">{formatCurrency(item.sellPrice)}</td>
                 <td className="py-2 text-right font-medium">{formatCurrency(item.total)}</td>
