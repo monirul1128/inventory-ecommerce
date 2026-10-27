@@ -18,22 +18,25 @@ export default function AdminLoginPage() {
     e.preventDefault()
     setLoading(true)
     try {
-      console.log('Attempting login with:', email)
-      const result = await signIn('credentials', { email, password, redirect: false })
-      console.log('Login result:', result)
+      console.log('Attempting custom login with:', email)
       
-      if (result?.error) { 
-        console.error('Login error:', result.error)
-        toast.error('ইমেইল বা পাসওয়ার্ড সঠিক নয়') 
-      } else if (result?.ok) { 
-        console.log('Login successful, redirecting...')
-        toast.success('লগইন সফল হয়েছে')
-        router.push('/admin/dashboard')
-        router.refresh()
-      } else {
-        console.error('Unexpected result:', result)
-        toast.error('লগইন করতে সমস্যা হয়েছে')
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await res.json()
+      console.log('Login response:', data)
+
+      if (!res.ok) {
+        toast.error(data.error || 'লগইন করতে সমস্যা হয়েছে')
+        return
       }
+
+      toast.success('লগইন সফল হয়েছে!')
+      router.push('/admin/dashboard')
+      router.refresh()
     } catch (error) {
       console.error('Login exception:', error)
       toast.error('লগইন করতে সমস্যা হয়েছে')
