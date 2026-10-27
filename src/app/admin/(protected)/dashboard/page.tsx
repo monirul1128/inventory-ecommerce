@@ -3,10 +3,31 @@ import { Badge } from '@/components/ui/badge'
 import { formatCurrency, formatDate } from '@/lib/utils'
 
 async function getDashboardData() {
-  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
-  const res = await fetch(`${baseUrl}/api/dashboard`, { cache: 'no-store' })
-  if (!res.ok) return null
-  return res.json()
+  try {
+    // Use relative URL in production, absolute in development
+    const baseUrl = typeof window === 'undefined' 
+      ? (process.env.NEXTAUTH_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
+      : ''
+    
+    const res = await fetch(`${baseUrl}/api/dashboard`, { 
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    
+    if (!res.ok) {
+      console.error('Dashboard API error:', res.status, res.statusText)
+      return null
+    }
+    
+    const data = await res.json()
+    console.log('Dashboard data loaded:', data)
+    return data
+  } catch (error) {
+    console.error('Dashboard fetch error:', error)
+    return null
+  }
 }
 
 export default async function DashboardPage() {
